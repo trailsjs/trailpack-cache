@@ -23,6 +23,8 @@
     "trailjs"
   ],
   "dependencies": {
+    "cache-manager": "^2.1.2",
+    "lodash": "^4.14.0",
     "trailpack": "latest"
   },
   "devDependencies": {
