@@ -1,13 +1,13 @@
 'use strict'
 
 const cacheManager = require('cache-manager')
-const store = require('cache-manager-mongoose')
+const redisStore = require('cache-manager-redis')
 
 /**
- * @module MongooseStore
- * @description Mongoose Store Provider
+ * @module RedisStore
+ * @description Redis Store Provider
  */
 module.exports = (config) => {
-  config.store = store
+  config.store = redisStore
   return cacheManager.caching(config)
 }

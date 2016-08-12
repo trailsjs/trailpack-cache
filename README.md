@@ -78,6 +78,19 @@ module.exports = {
   defaults: ['memory-store']
 }
 ```
+## Usage
+
+```JavaScript
+  const mycache = this.app.services.CacheService.getCaches()
+  mycache.set('mystoreddata', 'testValue', {ttl: 10}, function(err){
+    if (err) { throw err; }
+    mycache.get('mystoreddata', function(err, result) {
+        console.log(result);
+        // >> 'testValue'
+        mycache.del('mystoreddata', function(err) {});
+    });
+  })
+```
 
 [npm-image]: https://img.shields.io/npm/v/trailpack-cache.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/trailpack-cache
