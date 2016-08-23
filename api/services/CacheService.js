@@ -5,9 +5,9 @@ const Service = require('trails-service')
 const _ = require('lodash')
 
 /**
- * @module CacheService
- * @description Cache Service
- */
+* @module CacheService
+* @description Cache Service
+*/
 module.exports = class CacheService extends Service {
 
   constructor(app) {
@@ -36,44 +36,45 @@ module.exports = class CacheService extends Service {
   */
   getStores(storesConfig) {
     // @TODO: Chache Manager caching Call
-    let that = this
-    let storePresets = new Array()
+    const that = this
+    const storePresets = new Array()
     _.each(storesConfig, function(value){
-      storePresets.push(_.find(that.app.config.caches.stores, {name:value}))
+      storePresets.push(_.find(that.app.config.caches.stores, {name: value}))
     })
     _.each(storePresets, function(value){
       switch (value.type) {
-        case 'memory':
-            that.storeInstances[value.name] = that.stores.memory(value)
+      case 'memory':
+        that.storeInstances[value.name] = that.stores.memory(value)
         break
-        case 'fs':
-            that.storeInstances[value.name] = that.stores.fs(value)
+      case 'fs':
+        that.storeInstances[value.name] = that.stores.fs(value)
         break
-        case 'fsbinary':
-            that.storeInstances[value.name] = that.stores.fsbinary(value)
+      case 'fsbinary':
+        that.storeInstances[value.name] = that.stores.fsbinary(value)
         break
-        case 'mongodb':
-          that.storeInstances[value.name] = that.stores.mongodb(value)
+      case 'mongodb':
+        that.storeInstances[value.name] = that.stores.mongodb(value)
         break
-        case 'mongoose':
-          that.storeInstances[value.name] = that.stores.mongoose(value)
+      case 'mongoose':
+        that.storeInstances[value.name] = that.stores.mongoose(value)
         break
-        case 'redis':
-          that.storeInstances[value.name] = that.stores.redis(value)
+      case 'redis':
+        that.storeInstances[value.name] = that.stores.redis(value)
         break
-        case 'hazelcast':
-          that.storeInstances[value.name] = that.stores.hazelcast(value)
+      case 'hazelcast':
+        that.storeInstances[value.name] = that.stores.hazelcast(value)
         break
-        default:
-            console.log("Incorect type parameter in cache.js configuration")
+      default:
+        throw new Error('E_INCORECT_PARAMETER_IN_CONFIGURATION')
       }
     })
     this.storeInstances = that.storeInstances
     if (this.storeInstances.length > 1) {
       return cacheManager.multiCaching(this.storeInstances)
-    } else {
+    }
+    else {
       let instanceName
-      for(var instance in this.storeInstances){
+      for (const instance in this.storeInstances){
         instanceName = instance
       }
       return this.storeInstances[instanceName]
