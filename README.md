@@ -92,6 +92,14 @@ module.exports = {
   })
 ```
 
+## Contributing
+We love contributions! Please check out our [Contributor's Guide](https://github.com/trailsjs/trails/blob/master/.github/CONTRIBUTING.md) for more
+information on how our projects are organized and how to get started.
+
+## License
+[MIT](https://github.com/trailsjs/trailpack-hapi/blob/master/LICENSE)
+
+<img src="http://i.imgur.com/dCjNisP.png">
 [npm-image]: https://img.shields.io/npm/v/trailpack-cache.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/trailpack-cache
 [npm-download]: https://img.shields.io/npm/dt/trailpack-cache.svg
