@@ -1,5 +1,4 @@
 # trailpack-cache
-###### WARING : The current version of this trailpack is not available
 
 [![Gitter][gitter-image]][gitter-url]
 [![NPM version][npm-image]][npm-url]
@@ -104,10 +103,10 @@ information on how our projects are organized and how to get started.
 [npm-url]: https://npmjs.org/package/trailpack-cache
 [npm-download]: https://img.shields.io/npm/dt/trailpack-cache.svg
 [ci-image]: https://img.shields.io/travis/trailsjs/trailpack-cache/master.svg?style=flat-square
-[ci-url]: https://travis-ci.org//trailpack-cache
+[ci-url]: https://travis-ci.org/trailsjs/trailpack-cache
 [daviddm-image]: http://img.shields.io/david/trailsjs/trailpack-cache.svg?style=flat-square
 [daviddm-url]: https://david-dm.org/trailsjs/trailpack-cache
 [codeclimate-image]: https://img.shields.io/codeclimate/github/trailsjs/trailpack-cache.svg?style=flat-square
-[codeclimate-url]: https://codeclimate.com/github//trailpack-cache
+[codeclimate-url]: https://codeclimate.com/github/trailsjs/trailpack-cache
 [gitter-image]: http://img.shields.io/badge/+%20GITTER-JOIN%20CHAT%20%E2%86%92-1DCE73.svg?style=flat-square
 [gitter-url]: https://gitter.im/trailsjs/trails
