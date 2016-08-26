@@ -5,9 +5,9 @@ const Service = require('trails-service')
 const _ = require('lodash')
 
 /**
-* @module CacheService
-* @description Cache Service
-*/
+ * @module CacheService
+ * @description Cache Service
+ */
 module.exports = class CacheService extends Service {
 
   constructor(app) {
@@ -17,11 +17,11 @@ module.exports = class CacheService extends Service {
   }
 
   /**
-  * Get one or multiple cache stores
-  * If not defined it will get all the defaults stores
-  * @param stores String OR Array of stores names
-  * @return Single OR MultiCache Instance
-  */
+   * Get one or multiple cache stores
+   * If not defined it will get all the defaults stores
+   * @param {Array|String} stores String OR Array of stores names
+   * @return {Object} Single OR MultiCache Instance
+   */
   getCaches(stores) {
     if (_.isEmpty(stores) || _.isUndefined(stores)) {
       stores = this.app.config.caches.defaults
@@ -30,54 +30,32 @@ module.exports = class CacheService extends Service {
   }
 
   /**
-  * Get the stores from store configuration
-  * @param storesConfig the configuration
-  * @return Caching Intances
-  */
+   * Get the stores from store configuration
+   * @param {Object} storesConfig the configuration
+   * @return {Object|Array} Caching Intances
+   * @throws {Error} If no Store available/configured
+   */
   getStores(storesConfig) {
     // @TODO: Chache Manager caching Call
-    const that = this
     const storePresets = new Array()
-    _.each(storesConfig, function(value){
-      storePresets.push(_.find(that.app.config.caches.stores, {name: value}))
+    _.each(storesConfig, value => {
+      storePresets.push(_.find(this.app.config.caches.stores, {
+        name: value
+      }))
     })
-    _.each(storePresets, function(value){
-      switch (value.type) {
-      case 'memory':
-        that.storeInstances[value.name] = that.stores.memory(value)
-        break
-      case 'fs':
-        that.storeInstances[value.name] = that.stores.fs(value)
-        break
-      case 'fsbinary':
-        that.storeInstances[value.name] = that.stores.fsbinary(value)
-        break
-      case 'mongodb':
-        that.storeInstances[value.name] = that.stores.mongodb(value)
-        break
-      case 'mongoose':
-        that.storeInstances[value.name] = that.stores.mongoose(value)
-        break
-      case 'redis':
-        that.storeInstances[value.name] = that.stores.redis(value)
-        break
-      case 'hazelcast':
-        that.storeInstances[value.name] = that.stores.hazelcast(value)
-        break
-      default:
+    _.each(storePresets, value => {
+      if (!_.isFunction(this.stores[value.type]))
         throw new Error('E_INCORECT_PARAMETER_IN_CONFIGURATION')
-      }
+
+      this.storeInstances[value.name] = this.stores[value.type](value)
     })
-    this.storeInstances = that.storeInstances
-    if (this.storeInstances.length > 1) {
+    const keys = _.keys(this.storeInstances)
+    if (!keys.length)
+      throw new Error('E_NO_STORES_CONFIGURED')
+
+    if (keys.length > 1)
       return cacheManager.multiCaching(this.storeInstances)
-    }
-    else {
-      let instanceName
-      for (const instance in this.storeInstances){
-        instanceName = instance
-      }
-      return this.storeInstances[instanceName]
-    }
+    else
+      return this.storeInstances[keys[0]]
   }
 }
