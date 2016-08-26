@@ -5,6 +5,6 @@ module.exports = {
   mongodb: require('./mongodb'),
   mongoose: require('./mongoose'),
   fs: require('./fs'),
-  fsbinary: require('./fsbinary'),
-  hazelcast: require('./hazelcast')
+  fsbinary: require('./fsbinary')//,
+  // hazelcast: require('./hazelcast')
 }
