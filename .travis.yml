@@ -14,11 +14,10 @@ notifications:
 
 deploy:
   provider: npm
-  email: hello@trailsjs.io
-  api_key:
-    secure: putthesecurehere
+  email: hello@langa.io
   skip_cleanup: true
+  api_key:
+    secure: U74FlEmWspZBe9rsMD2Fal7yEJ74aOnwiLx5Y/KVbIFll3/TnP6MeY5sPVtiDa0vXRInt/emqRcUSh2OVjiFuWR0u61Qlxs2LW2gkl+v8IKChpIl4tYKoIZFIGOAkIMUYwQNBDsoLhjbfByQcvpS15ZwNp/Wn3hesFyMJrljmjUC7paqU3G+LT/gQ2Jrz6jOgPe57GjWc1Q+RcTV/JGMQ0Up0QISCZUCkfZ9E9c+KBhG3rj9unv7rtKi348osVG965N11XtC5I2yNe+hzq3FdH5dnah+rZYrCQYMbEqK/Ia0uYd11sITI86l1z30rO0vSXt7WzASYWeTRa5hoEWmVCMDtQ4lPjAKhpKLFGgKFIWT4zNOfmXfU35J7crSVhz7ORrIIYrGZ+lqvLO9htgfpN6Gh8Doii83R6kKTpBhbKApFzr7Lf4KgzxP9kTxiY5MGyHdLvGyDbfH0BaMPvAkQRQbvn/GoPa+6lwfVua5GCIa/iaZ1Zhrm/wmFM7bbGfFj2x8HHNOK781B+Ny+1yiqznK6sYuYThVV4MHwiObnPfV4RZYp2K0x9llpMFkNEK+/80ZdHspUVgd1IJ9U1zRoaRlTGavIxvdrnAjTriWW+Fj5xuD1CKTY0hMzWGLctjQ13QYkQIzsgp+NS6VM9LdUsPyGBjIoDBgSwZEgCFsfUA=
   on:
     tags: true
     repo: trailsjs/trailpack-cache
-    node: 6
