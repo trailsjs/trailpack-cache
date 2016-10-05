@@ -59,19 +59,21 @@ module.exports = {
   // Example for mongo store
   {
     name: 'mongo-store',
-    type: 'mongo',
-    host: 'loclahost',
-    port: '27017',
-    username: 'username',
-    password: 'password',
-    database: 'mymondodb',
-    collection: 'cacheManager',
-    compression: false,
-    server: {
-      poolSize: 5,
-      auto_reconnect: true
-    },
-    ttl = 60
+    type: 'mongodb',
+    options: {
+      host: 'localhost',
+      port: '27017',
+      username: 'username',
+      password: 'password',
+      database: 'mymondodb',
+      collection: 'cacheManager',
+      compression: false,
+      server: {
+        poolSize: 5,
+        auto_reconnect: true
+      },
+      ttl: 60
+    }
   }],
 
   defaults: ['memory-store']
