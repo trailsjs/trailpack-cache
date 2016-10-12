@@ -10,9 +10,9 @@ const mongoStore = require('cache-manager-mongodb')
 module.exports = (config) => {
   config.store = mongoStore
   return new Promise((resolve) => {
-    config.createCollectionCallback = () => {
-      return resolve(mongoCache);
-    }
     const mongoCache = cacheManager.caching(config)
+    config.createCollectionCallback = () => {
+      return resolve(mongoCache)
+    }
   })
 }

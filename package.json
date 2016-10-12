@@ -27,7 +27,7 @@
     "cache-manager-fs": "^1.0.5",
     "cache-manager-fs-binary": "^1.0.2",
     "cache-manager-hazelcast": "^0.2.1",
-    "cache-manager-mongodb": "v4l3r10/node-cache-manager-mongodb",
+    "cache-manager-mongodb": "^0.1.7",
     "cache-manager-mongoose": "0.0.1",
     "cache-manager-redis": "^0.2.3",
     "lodash": "^4.14.0",
