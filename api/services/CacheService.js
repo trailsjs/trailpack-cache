@@ -1,8 +1,10 @@
 'use strict'
 
+let instance = null
 const cacheManager = require('cache-manager')
 const Service = require('trails-service')
 const _ = require('lodash')
+
 
 /**
  * @module CacheService
@@ -12,8 +14,10 @@ module.exports = class CacheService extends Service {
 
   constructor(app) {
     super(app)
-    this.storeInstances = new Array()
-    this.stores = require('./stores')
+    if (_.isEmpty(instance)) {
+      this.storeInstances = new Array()
+      this.stores = require('./stores')
+    }
   }
 
   /**
@@ -23,6 +27,9 @@ module.exports = class CacheService extends Service {
    * @return {Object} Single OR MultiCache Instance
    */
   getCaches(stores) {
+    if (!_.isEmpty(instance)) {
+      return instance
+    }
     if (_.isEmpty(stores) || _.isUndefined(stores)) {
       stores = this.app.config.caches.defaults
     }
@@ -53,9 +60,12 @@ module.exports = class CacheService extends Service {
     if (!keys.length)
       throw new Error('E_NO_STORES_CONFIGURED')
 
-    if (keys.length > 1)
-      return cacheManager.multiCaching(this.storeInstances)
-    else
-      return this.storeInstances[keys[0]]
+    if (keys.length > 1){
+      instance = cacheManager.multiCaching(this.storeInstances)
+    }
+    else {
+      instance  = this.storeInstances[keys[0]]
+    }
+    return instance
   }
 }

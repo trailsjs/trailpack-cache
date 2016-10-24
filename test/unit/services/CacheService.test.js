@@ -15,7 +15,7 @@ describe('api.services.CacheService', () => {
   describe('#getersetter', () => {
     it('should insert a record in cache', () => {
       const testCache = CacheService.getCaches()
-      testCache.set('varname', 'valuedata', {ttl: 10}, function(err){
+      testCache.set('varname', 'valuedata', {ttl: 60}, function(err){
         if (err) { throw err }
         describe('#setter', () => {
           it('should not return error on setting cache value',() => {
@@ -29,9 +29,25 @@ describe('api.services.CacheService', () => {
             })
           })
           assert.equal(result, 'valuedata')
-          testCache.del('varname', function(err) {})
+
         })
       })
     })
   })
+  describe('#Singleton Usage', () => {
+    it('should get record from previous stored cache call', () => {
+      const otherCacheCall = CacheService.getCaches()
+      otherCacheCall.get('varname', function(err,result) {
+        assert.equal(result, 'valuedata')
+      })
+    })
+  })
+  /*
+  describe('#SucessFull Deletion', () => {
+    it('should delete previous cacheCall', () => {
+        testCache.del('varname', function(err) {})
+    })
+  })
+  */
+
 })
