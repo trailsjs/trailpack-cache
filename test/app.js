@@ -13,6 +13,17 @@ module.exports = _.defaultsDeep({
     services: { }
   },
   config: {
+    caches: {
+      stores: [
+        {
+          name: 'memory',
+          type: 'memory',
+          max: 100,
+          ttl: 0
+        }
+      ],
+      defaults: ['memory']
+    },
     main: {
       packs: [
         smokesignals.Trailpack,

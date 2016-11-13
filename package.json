@@ -31,17 +31,16 @@
     "cache-manager-mongoose": "0.0.2",
     "cache-manager-redis": "^0.2.3",
     "lodash": "^4.16.4",
-    "trailpack": "latest",
-    "trails-service": "^1.0.0-beta-2"
+    "trailpack": "^1.0.5",
+    "trails-service": "^1.0.0"
   },
   "devDependencies": {
-    "lodash": "^4.11.1",
-    "trails": "latest",
-    "eslint": "^2.4",
-    "eslint-config-trails": "^1.0.4",
-    "mocha": "^2.4.5",
+    "eslint": "^3.10.0",
+    "eslint-config-trails": "^1.0.7",
+    "mocha": "^3.1.2",
     "smokesignals": "^1.0.9",
-    "trailpack-core": "^1.0.0-beta-6"
+    "trailpack-core": "^1.0.1",
+    "trails": "^1.1.0"
   },
   "scripts": {
     "test": "eslint . && mocha"
