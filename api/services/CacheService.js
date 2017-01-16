@@ -2,7 +2,7 @@
 
 let instance = null
 const cacheManager = require('cache-manager')
-const Service = require('trails-service')
+const Service = require('trails/service')
 const _ = require('lodash')
 
 

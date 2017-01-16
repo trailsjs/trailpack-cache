@@ -19,7 +19,7 @@ describe('api.services.CacheService', () => {
         if (err) { throw err }
         describe('#setter', () => {
           it('should not return error on setting cache value',() => {
-            assert.strictEqual(err, undefined, 'Cache Setter return errors')
+            assert.strictEqual(err, null, 'Cache Setter return errors')
           })
         })
         testCache.get('varname', function(err, result) {
