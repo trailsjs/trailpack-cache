@@ -11,12 +11,7 @@
 
 
 ## Install
-### With yeoman :
 
-```sh
-npm install -g yo generator-trails
-yo trails:trailpack trailpack-cache
-```
 ### With npm (you will have to create config file manually) :
 ```sh
 $ npm install --save trailpack-cache
