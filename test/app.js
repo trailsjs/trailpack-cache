@@ -1,17 +1,17 @@
 'use strict'
 
-const _ = require('lodash')
+const defaultsDeep = require('lodash.defaultsdeep')
 const smokesignals = require('smokesignals')
 const fsStore = require('cache-manager-fs')
 
-module.exports = _.defaultsDeep({
+module.exports = defaultsDeep({
   pkg: {
     name: require('../package').name + '-test'
   },
   api: {
-    models: { },
-    controllers: { },
-    services: { }
+    models: {},
+    controllers: {},
+    services: {}
   },
   config: {
     caches: {
