@@ -2,6 +2,7 @@
 
 const _ = require('lodash')
 const smokesignals = require('smokesignals')
+const fsStore = require('cache-manager-fs')
 
 module.exports = _.defaultsDeep({
   pkg: {
@@ -17,9 +18,12 @@ module.exports = _.defaultsDeep({
       stores: [
         {
           name: 'memory',
-          type: 'memory',
+          store: 'memory',
           max: 100,
           ttl: 0
+        }, {
+          name: 'fs',
+          store: fsStore
         }
       ],
       defaults: ['memory']

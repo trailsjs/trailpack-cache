@@ -4,7 +4,7 @@ const assert = require('assert')
 
 describe('api.services.CacheService', () => {
   it('should exist', () => {
-    assert(global.app.api.services['CacheService'])
+    assert(global.app.api.services.CacheService)
   })
 
   let CacheService
@@ -12,42 +12,56 @@ describe('api.services.CacheService', () => {
     CacheService = global.app.services.CacheService
   })
 
-  describe('#getersetter', () => {
-    it('should insert a record in cache', () => {
-      const testCache = CacheService.getCaches()
-      testCache.set('varname', 'valuedata', {ttl: 60}, function(err){
-        if (err) { throw err }
-        describe('#setter', () => {
-          it('should not return error on setting cache value',() => {
-            assert.strictEqual(err, null, 'Cache Setter return errors')
-          })
-        })
-        testCache.get('varname', function(err, result) {
-          describe('#getter', () => {
-            it('should not return error on getting cache value', () => {
-              assert.strictEqual(err, null, 'Cache getter return errors')
-            })
-          })
-          assert.equal(result, 'valuedata')
+  describe('Stores', () => {
+    it('should retrieve a memory store', () => {
+      const memory = CacheService.getStore('memory')
+      assert(memory.store.name, 'memory')
+      assert(CacheService.storeInstances.memory, memory)
+    })
 
-        })
+    it('should retrieve a default store', () => {
+      const defaults = CacheService.getStore()
+      assert(defaults.store.name, global.app.config.caches.defaults[0])
+    })
+
+    it('should retrieve an fs store', () => {
+      const fs = CacheService.getStore('fs')
+      assert(fs.store.name, 'fs')
+    })
+
+    it('should retrieve a multi caching store', () => {
+      const multi = CacheService.getMultiCachingStore(['memory', 'fs'])
+      assert(!multi.store)
+    })
+  })
+
+  describe('Caches', () => {
+    it('should retrieve an undefined value from memory store', () => {
+      const memory = CacheService.getStore('memory')
+      return memory.get('test').then(result => {
+        assert(!result)
+      })
+    })
+
+    it('should set a value to memory store', () => {
+      const memory = CacheService.getStore('memory')
+      return memory.set('test', 'ok').then(result => {
+        assert(result, 'ok')
+      })
+    })
+
+    it('should retrieve the value from memory store', () => {
+      const memory = CacheService.getStore('memory')
+      return memory.get('test').then(result => {
+        assert(result, 'ok')
+      })
+    })
+
+    it('should delete a value from memory store', () => {
+      const memory = CacheService.getStore('memory')
+      return memory.del('test').then(result => {
+        assert(!result)
       })
     })
   })
-  describe('#Singleton Usage', () => {
-    it('should get record from previous stored cache call', () => {
-      const otherCacheCall = CacheService.getCaches()
-      otherCacheCall.get('varname', function(err,result) {
-        assert.equal(result, 'valuedata')
-      })
-    })
-  })
-  /*
-  describe('#SucessFull Deletion', () => {
-    it('should delete previous cacheCall', () => {
-        testCache.del('varname', function(err) {})
-    })
-  })
-  */
-
 })
