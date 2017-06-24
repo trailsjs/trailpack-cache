@@ -1,10 +1,7 @@
 'use strict'
 
-let instance = null
 const cacheManager = require('cache-manager')
 const Service = require('trails/service')
-const _ = require('lodash')
-
 
 /**
  * @module CacheService
@@ -14,58 +11,94 @@ module.exports = class CacheService extends Service {
 
   constructor(app) {
     super(app)
-    if (_.isEmpty(instance)) {
-      this.storeInstances = new Array()
-      this.stores = require('./stores')
-    }
+    this.storeInstances = {}
   }
 
-  /**
-   * Get one or multiple cache stores
-   * If not defined it will get all the defaults stores
-   * @param {Array|String} stores String OR Array of stores names
-   * @return {Object} Single OR MultiCache Instance
-   */
-  getCaches(stores) {
-    if (!_.isEmpty(instance)) {
-      return instance
+  init() {
+    const stores = this.app.config.caches.stores
+    const storesCreation = []
+
+    for (const store of stores) {
+      if (store.options && store.options.collection) {
+        storesCreation.push(new Promise(resolve => {
+          let mongoStore
+          store.createCollectionCallback = () => {
+            return resolve({
+              name: store.name,
+              store: mongoStore
+            })
+          }
+          mongoStore = cacheManager.caching(store)
+        }))
+      }
+      else {
+        storesCreation.push(Promise.resolve({
+          name: store.name,
+          store: cacheManager.caching(store)
+        }))
+      }
     }
-    if (_.isEmpty(stores) || _.isUndefined(stores)) {
-      stores = this.app.config.caches.defaults
-    }
-    return this.getStores(stores)
+
+    return Promise.all(storesCreation).then(results => {
+      for (const result of results) {
+        this.storeInstances[result.name] = result.store
+      }
+    })
   }
 
-  /**
-   * Get the stores from store configuration
-   * @param {Object} storesConfig the configuration
-   * @return {Object|Array} Caching Intances
-   * @throws {Error} If no Store available/configured
-   */
-  getStores(storesConfig) {
-    // @TODO: Chache Manager caching Call
-    const storePresets = new Array()
-    _.each(storesConfig, value => {
-      storePresets.push(_.find(this.app.config.caches.stores, {
-        name: value
-      }))
-    })
-    _.each(storePresets, value => {
-      if (!_.isFunction(this.stores[value.type]))
-        throw new Error('E_INCORECT_PARAMETER_IN_CONFIGURATION')
-
-      this.storeInstances[value.name] = this.stores[value.type](value)
-    })
-    const keys = _.keys(this.storeInstances)
-    if (!keys.length)
-      throw new Error('E_NO_STORES_CONFIGURED')
-
-    if (keys.length > 1){
-      instance = cacheManager.multiCaching(this.storeInstances)
+  getStore(name) {
+    if (!name) {
+      name = this.app.config.caches.defaults[0]
+    }
+    if (this.storeInstances[name]) {
+      return this.storeInstances[name]
     }
     else {
-      instance  = this.storeInstances[keys[0]]
+      throw new Error('unknown store named ' + name)
     }
-    return instance
+  }
+
+  /**
+   * Get stores for multi caching
+   * @param {Array} names of store wanted
+   * @return {Object} Multi Caching Instance
+   * @throws {Error} If no Store available/configured
+   */
+  getMultiCachingStore(names) {
+    if (!names || names.length === 0) {
+      names = this.app.config.caches.defaults
+    }
+    const name = names.join('_')
+    if (this.storeInstances[name]) {
+      return this.storeInstances[name]
+    }
+    else {
+      const stores = []
+      names.forEach(type => {
+        stores.push(this.getStore(type))
+      })
+      this.storeInstances[name] = cacheManager.multiCaching(stores)
+      return this.storeInstances[name]
+    }
+  }
+
+  unload() {
+    const unloadActions = []
+    for (const key in this.storeInstances) {
+      const cache = this.storeInstances[key]
+      if (cache.store && cache.store.client) {
+        unloadActions.push(new Promise((resolve, reject) => {
+          cache.store.client.close(true, err => {
+            if (err) {
+              reject(err)
+            }
+            else {
+              resolve()
+            }
+          })
+        }))
+      }
+    }
+    return Promise.all(unloadActions)
   }
 }

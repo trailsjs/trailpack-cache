@@ -45,7 +45,7 @@ module.exports = {
   // Example for redis Store
   {
     name: 'my-redis-store',
-    type: 'redis',
+    store: redisStore,
     host: 'localhost',
     auth_pass: ''
     db: 0,
@@ -54,14 +54,14 @@ module.exports = {
   // Example for memory store
   {
     name: 'memory-store',
-    type: 'memory',
+    store: 'memory',
     max: 100,
     ttl: 60
   },
   // Example for mongo store
   {
     name: 'mongo-store',
-    type: 'mongodb',
+    store: mongoStore,
     options: {
       host: 'localhost',
       port: '27017',
@@ -79,19 +79,28 @@ module.exports = {
   defaults: ['memory-store']
 }
 ```
+
+For more information about store (type and configuration) please see the cache-manager documentation.
+
 ## Usage
 
 ```JavaScript
-  const mycache = this.app.services.CacheService.getCaches()
-  mycache.set('mystoreddata', 'testValue', {ttl: 10}, function(err){
-    if (err) { throw err; }
-    mycache.get('mystoreddata', function(err, result) {
-        console.log(result);
+  const myDefaultCache = this.app.services.CacheService.getStore() // Return the first store into defaults config
+  myDefaultCache.set('mystoreddata', 'testValue', {ttl: 10}).then(result => {
+  return myDefaultCache.get('mystoreddata').then(result => {
+        console.log(result)
         // >> 'testValue'
-        mycache.del('mystoreddata', function(err) {});
-    });
+        return myDefaultCache.del('mystoreddata')
+    })
   })
+
 ```
+
+You can retrieve a specific store by name like this: 
+`const myMongoCache = this.app.services.CacheService.getStore('mongo-store')`
+
+You can retrieve a multi caching store like this (without parameters to get multi caching with defaults stores): 
+`const myMongoCache = this.app.services.CacheService.getMultiCachingStore(['memory-store', 'mongo-store'])`
 
 ## Contributing
 We love contributions! Please check out our [Contributor's Guide](https://github.com/trailsjs/trails/blob/master/.github/CONTRIBUTING.md) for more
