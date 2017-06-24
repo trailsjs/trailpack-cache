@@ -10,23 +10,24 @@ describe('api.services.CacheService', () => {
   let CacheService
   before(() => {
     CacheService = global.app.services.CacheService
+    return CacheService.init()
   })
 
   describe('Stores', () => {
     it('should retrieve a memory store', () => {
       const memory = CacheService.getStore('memory')
-      assert(memory.store.name, 'memory')
-      assert(CacheService.storeInstances.memory, memory)
+      assert.equal(memory.store.name, 'memory')
+      assert.equal(CacheService.storeInstances.memory, memory)
     })
 
     it('should retrieve a default store', () => {
       const defaults = CacheService.getStore()
-      assert(defaults.store.name, global.app.config.caches.defaults[0])
+      assert.equal(defaults.store.name, global.app.config.caches.defaults[0])
     })
 
     it('should retrieve an fs store', () => {
       const fs = CacheService.getStore('fs')
-      assert(fs.store.name, 'fs')
+      assert.equal(fs.store.name, 'diskstore')
     })
 
     it('should retrieve a multi caching store', () => {
@@ -46,14 +47,14 @@ describe('api.services.CacheService', () => {
     it('should set a value to memory store', () => {
       const memory = CacheService.getStore('memory')
       return memory.set('test', 'ok').then(result => {
-        assert(result, 'ok')
+        assert.equal(result, 'ok')
       })
     })
 
     it('should retrieve the value from memory store', () => {
       const memory = CacheService.getStore('memory')
       return memory.get('test').then(result => {
-        assert(result, 'ok')
+        assert.equal(result, 'ok')
       })
     })
 

@@ -24,14 +24,25 @@ module.exports = class CacheTrailpack extends Trailpack {
       this.app.config.caches.stores = [
         // Default Memory Store
         {
-          name: 'memory-store',
+          name: 'memory',
           type: 'memory',
-          max: 100,
-          ttl: 60
+          max: 500,
+          ttl: 0
         }]
 
-      this.app.config.caches.defaults = ['memory-store']
+      this.app.config.caches.defaults = ['memory']
     }
+  }
+
+  /**
+   * create caching stores
+   */
+  init() {
+    return this.app.services.CacheService.init()
+  }
+
+  unload() {
+    return this.app.services.CacheService.unload()
   }
 
   constructor(app) {

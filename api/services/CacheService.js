@@ -14,6 +14,38 @@ module.exports = class CacheService extends Service {
     this.storeInstances = {}
   }
 
+  init() {
+    const stores = this.app.config.caches.stores
+    const storesCreation = []
+
+    for (let store of stores) {
+      if (store.options && store.options.collection) {
+        storesCreation.push(new Promise(resolve => {
+          let mongoStore
+          store.createCollectionCallback = () => {
+            return resolve({
+              name: store.name,
+              store: mongoStore
+            })
+          }
+          mongoStore = cacheManager.caching(store)
+        }))
+      }
+      else {
+        storesCreation.push(Promise.resolve({
+          name: store.name,
+          store: cacheManager.caching(store)
+        }))
+      }
+    }
+
+    return Promise.all(storesCreation).then(results => {
+      for (let result of results) {
+        this.storeInstances[result.name] = result.store
+      }
+    })
+  }
+
   getStore(name) {
     if (!name) {
       name = this.app.config.caches.defaults[0]
@@ -22,12 +54,7 @@ module.exports = class CacheService extends Service {
       return this.storeInstances[name]
     }
     else {
-      const stores = this.app.config.caches.stores.filter(store => store.name === name)
-      if (stores.length === 0) {
-        throw new Error('Store ' + name + ' doesn\'t exist')
-      }
-      this.storeInstances[name] = cacheManager.caching(stores[0])
-      return this.storeInstances[name]
+      throw new Error('unknown store named ' + name)
     }
   }
 
@@ -53,5 +80,25 @@ module.exports = class CacheService extends Service {
       this.storeInstances[name] = cacheManager.multiCaching(stores)
       return this.storeInstances[name]
     }
+  }
+
+  unload() {
+    const unloadActions = []
+    for (let key in this.storeInstances) {
+      const cache = this.storeInstances[key]
+      if (cache.store && cache.store.client) {
+        unloadActions.push(new Promise((resolve, reject) => {
+          cache.store.client.close(true, err => {
+            if (err) {
+              reject(err)
+            }
+            else {
+              resolve()
+            }
+          })
+        }))
+      }
+    }
+    return Promise.all(unloadActions)
   }
 }
