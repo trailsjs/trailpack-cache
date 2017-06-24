@@ -37,6 +37,8 @@ module.exports = {
 ## Configuration
 
 ```
+const mongoStore = require('cache-manager-mongodb')
+const redisStore = require('cache-manager-redis')
 // config/caches.js
 module.exports = {
   stores: [
@@ -68,10 +70,8 @@ module.exports = {
       database: 'mymondodb',
       collection: 'cacheManager',
       compression: false,
-      server: {
-        poolSize: 5,
-        auto_reconnect: true
-      },
+      poolSize: 5,
+      auto_reconnect: true
       ttl: 60
     }
   }],
@@ -101,6 +101,7 @@ information on how our projects are organized and how to get started.
 [MIT](https://github.com/trailsjs/trailpack-hapi/blob/master/LICENSE)
 
 <img src="http://i.imgur.com/dCjNisP.png">
+
 [npm-image]: https://img.shields.io/npm/v/trailpack-cache.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/trailpack-cache
 [npm-download]: https://img.shields.io/npm/dt/trailpack-cache.svg
