@@ -37,7 +37,7 @@ module.exports = class CacheTrailpack extends Trailpack {
   /**
    * create caching stores
    */
-  init() {
+  initialize() {
     return this.app.services.CacheService.init()
   }
 
