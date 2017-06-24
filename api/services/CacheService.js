@@ -18,7 +18,7 @@ module.exports = class CacheService extends Service {
     const stores = this.app.config.caches.stores
     const storesCreation = []
 
-    for (let store of stores) {
+    for (const store of stores) {
       if (store.options && store.options.collection) {
         storesCreation.push(new Promise(resolve => {
           let mongoStore
@@ -40,7 +40,7 @@ module.exports = class CacheService extends Service {
     }
 
     return Promise.all(storesCreation).then(results => {
-      for (let result of results) {
+      for (const result of results) {
         this.storeInstances[result.name] = result.store
       }
     })
@@ -84,7 +84,7 @@ module.exports = class CacheService extends Service {
 
   unload() {
     const unloadActions = []
-    for (let key in this.storeInstances) {
+    for (const key in this.storeInstances) {
       const cache = this.storeInstances[key]
       if (cache.store && cache.store.client) {
         unloadActions.push(new Promise((resolve, reject) => {
